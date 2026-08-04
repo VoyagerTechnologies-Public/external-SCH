@@ -63,7 +63,7 @@
 **  \par Assumptions, External Events, and Notes:
 **       None
 **       
-**  \param [in]  MessagePtr   A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]  MessagePtr   A #CFE_MSG_Message_t * pointer that
 **                            references the software bus message 
 **
 **  \returns
@@ -73,10 +73,10 @@
 **  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
 **  \endreturns
 **
-**  \sa #CFE_SB_RcvMsg
+**  \sa #CFE_SB_ReceiveBuffer
 **
 *************************************************************************/
-int32 SCH_AppPipe(CFE_SB_MsgPtr_t MessagePtr);
+int32 SCH_AppPipe(CFE_MSG_Message_t * MessagePtr);
 
 /************************************************************************/
 /** \brief Manages Scheduler's Schedule and Message Definition Tables
@@ -107,7 +107,7 @@ int32 SCH_AcquirePointers(void);
 **  \par Assumptions, External Events, and Notes:
 **       This command does not affect the command execution counter
 **       
-**  \param [in]   MessagePtr   A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]   MessagePtr   A #CFE_MSG_Message_t * pointer that
 **                             references the software bus message 
 **       
 **  \returns
@@ -118,7 +118,7 @@ int32 SCH_AcquirePointers(void);
 **  \endreturns
 **
 *************************************************************************/
-int32 SCH_HousekeepingCmd(CFE_SB_MsgPtr_t MessagePtr);
+int32 SCH_HousekeepingCmd(CFE_MSG_Message_t * MessagePtr);
 
 /*
 ** Application command handlers
@@ -132,13 +132,13 @@ int32 SCH_HousekeepingCmd(CFE_SB_MsgPtr_t MessagePtr);
 **  \par Assumptions, External Events, and Notes:
 **       None
 **       
-**  \param [in]   MessagePtr   A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]   MessagePtr   A #CFE_MSG_Message_t * pointer that
 **                             references the software bus message 
 **
 **  \sa #SCH_NOOP_CC
 **
 *************************************************************************/
-void SCH_NoopCmd(CFE_SB_MsgPtr_t MessagePtr);
+void SCH_NoopCmd(CFE_MSG_Message_t * MessagePtr);
 
 /************************************************************************/
 /** \brief Process reset counters command
@@ -151,13 +151,13 @@ void SCH_NoopCmd(CFE_SB_MsgPtr_t MessagePtr);
 **  \par Assumptions, External Events, and Notes:
 **       None
 **       
-**  \param [in]   MessagePtr   A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]   MessagePtr   A #CFE_MSG_Message_t * pointer that
 **                             references the software bus message 
 **
 **  \sa #SCH_RESET_CC
 **
 *************************************************************************/
-void SCH_ResetCmd(CFE_SB_MsgPtr_t MessagePtr);
+void SCH_ResetCmd(CFE_MSG_Message_t * MessagePtr);
 
 /************************************************************************/
 /** \brief Enable a Single Activity Command
@@ -169,13 +169,13 @@ void SCH_ResetCmd(CFE_SB_MsgPtr_t MessagePtr);
 **  \par Assumptions, External Events, and Notes:
 **       None
 **       
-**  \param [in]   MessagePtr     A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
 **                               references the software bus message 
 **       
 **  \sa #SCH_ENABLE_CC, #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
 **
 *************************************************************************/
-void SCH_EnableCmd(CFE_SB_MsgPtr_t MessagePtr);
+void SCH_EnableCmd(CFE_MSG_Message_t * MessagePtr);
 
 /************************************************************************/
 /** \brief Disable a Single Activity Command
@@ -187,13 +187,13 @@ void SCH_EnableCmd(CFE_SB_MsgPtr_t MessagePtr);
 **  \par Assumptions, External Events, and Notes:
 **       None
 **       
-**  \param [in]   MessagePtr     A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
 **                               references the software bus message 
 **       
 **  \sa #SCH_ENABLE_CC, #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
 **
 *************************************************************************/
-void SCH_DisableCmd(CFE_SB_MsgPtr_t MessagePtr);
+void SCH_DisableCmd(CFE_MSG_Message_t * MessagePtr);
 
 /************************************************************************/
 /** \brief Enable a Group and/or Multi-Group(s) Command
@@ -205,13 +205,13 @@ void SCH_DisableCmd(CFE_SB_MsgPtr_t MessagePtr);
 **  \par Assumptions, External Events, and Notes:
 **       None
 **       
-**  \param [in]   MessagePtr     A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
 **                               references the software bus message 
 **       
 **  \sa #SCH_ENABLE_CC, #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
 **
 *************************************************************************/
-void SCH_EnableGroupCmd(CFE_SB_MsgPtr_t MessagePtr);
+void SCH_EnableGroupCmd(CFE_MSG_Message_t * MessagePtr);
 
 /************************************************************************/
 /** \brief Disable a Group and/or Multi-Group(s) Command
@@ -223,13 +223,13 @@ void SCH_EnableGroupCmd(CFE_SB_MsgPtr_t MessagePtr);
 **  \par Assumptions, External Events, and Notes:
 **       None
 **       
-**  \param [in]   MessagePtr     A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
 **                               references the software bus message 
 **       
 **  \sa #SCH_ENABLE_CC, #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
 **
 *************************************************************************/
-void SCH_DisableGroupCmd(CFE_SB_MsgPtr_t MessagePtr);
+void SCH_DisableGroupCmd(CFE_MSG_Message_t * MessagePtr);
 
 /************************************************************************/
 /** \brief Enables Major Frame Synchronization
@@ -242,13 +242,13 @@ void SCH_DisableGroupCmd(CFE_SB_MsgPtr_t MessagePtr);
 **  \par Assumptions, External Events, and Notes:
 **       None
 **       
-**  \param [in]   MessagePtr     A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
 **                               references the software bus message 
 **       
 **  \sa #SCH_ENABLE_CC, #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
 **
 *************************************************************************/
-void SCH_EnableSyncCmd(CFE_SB_MsgPtr_t MessagePtr);
+void SCH_EnableSyncCmd(CFE_MSG_Message_t * MessagePtr);
 
 /************************************************************************/
 /** \brief Creates and sends diagnostic message packet
@@ -259,11 +259,11 @@ void SCH_EnableSyncCmd(CFE_SB_MsgPtr_t MessagePtr);
 **  \par Assumptions, External Events, and Notes:
 **       None
 **       
-**  \param [in]   MessagePtr     A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
 **                               references the software bus message 
 **       
 *************************************************************************/
-void SCH_SendDiagTlmCmd(CFE_SB_MsgPtr_t MessagePtr);
+void SCH_SendDiagTlmCmd(CFE_MSG_Message_t * MessagePtr);
 
 /************************************************************************/
 /** \brief Updates appropriate command counters following command execution
@@ -277,11 +277,11 @@ void SCH_SendDiagTlmCmd(CFE_SB_MsgPtr_t MessagePtr);
 **       None
 **       
 **  \param [in]   GoodCommand    Indicates the command was successfully
-**                               performed (=TRUE) or contained an error
-**                               (=FALSE). 
+**                               performed (=true) or contained an error
+**                               (=false). 
 **       
 *************************************************************************/
-void SCH_PostCommandResult(boolean GoodCommand);
+void SCH_PostCommandResult(bool GoodCommand);
 
 /************************************************************************/
 /** \brief Verifies the length of the specified message
@@ -297,7 +297,7 @@ void SCH_PostCommandResult(boolean GoodCommand);
 **       None
 **       
 **       
-**  \param [in]   MessagePtr     A #CFE_SB_MsgPtr_t pointer that
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
 **                               references the software bus message 
 **       
 **  \param [in]   ExpectedLength The size, in bytes, that the specified
@@ -311,7 +311,7 @@ void SCH_PostCommandResult(boolean GoodCommand);
 **  \endreturns
 **
 *************************************************************************/
-int32 SCH_VerifyCmdLength (CFE_SB_MsgPtr_t MessagePtr, uint32 ExpectedLength);
+int32 SCH_VerifyCmdLength (CFE_MSG_Message_t * MessagePtr, uint32 ExpectedLength);
 
 #endif /* _sch_cmds_ */
 

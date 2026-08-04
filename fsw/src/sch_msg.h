@@ -54,7 +54,7 @@
 */
 typedef struct
 {
-    uint8             CmdHeader[CFE_SB_CMD_HDR_SIZE];  /**< \brief cFE Software Bus Command Message Header */
+    CFE_MSG_CommandHeader_t CmdHeader;                /**< \brief Command header */
 
 } SCH_NoArgsCmd_t;
 
@@ -68,7 +68,7 @@ typedef struct
 */
 typedef struct
 {
-    uint8    CmdHeader[CFE_SB_CMD_HDR_SIZE];          /**< \brief cFE Software Bus Command Message Header */
+    CFE_MSG_CommandHeader_t CmdHeader;                /**< \brief Command header */
 
     uint16   SlotNumber;                              /**< \brief Slot Number of Activity whose state is to change */
                                                       /**< \details Valid Range is zero to (#SCH_TOTAL_SLOTS - 1) */
@@ -87,7 +87,7 @@ typedef struct
 */
 typedef struct
 {
-    uint8    CmdHeader[CFE_SB_CMD_HDR_SIZE];          /**< \brief cFE Software Bus Command Message Header */
+    CFE_MSG_CommandHeader_t CmdHeader;                /**< \brief Command header */
 
     uint32   GroupData;                               /**< \brief Group and Multi-Group Identifiers
                                                            \details Most Significant Byte contains a Group ID of 1 to 255,
@@ -107,7 +107,7 @@ typedef struct
 
 typedef struct
 {
-    uint8    TlmHeader[CFE_SB_TLM_HDR_SIZE];          /**< \brief cFE Software Bus Telemetry Message Header */
+    CFE_MSG_TelemetryHeader_t    TelemetryHeader;     /**< \brief cFE Software Bus Telemetry Message Header */
 
     /*
     ** Command execution counters (ground commands)
@@ -208,10 +208,10 @@ typedef struct
     uint16   LastSyncMETSlot;                         /**< \schtlmmnemonic \SCH_LASTSYNCMETSLOT
                                                            \brief Slot number where Time Sync last occurred 
                                                            \details \ref SCHHK_LastSyncMETSlot "Click for more"  */
-    boolean  IgnoreMajorFrame;                        /**< \schtlmmnemonic \SCH_IGNOREMF
+    bool  IgnoreMajorFrame;                        /**< \schtlmmnemonic \SCH_IGNOREMF
                                                            \brief Major Frame too noisy to trust 
                                                            \details \ref SCHHK_IgnoreMajorFrame "Click for more"  */
-    boolean  UnexpectedMajorFrame;                    /**< \schtlmmnemonic \SCH_UNEXPCTDMAJORFRAME
+    bool  UnexpectedMajorFrame;                    /**< \schtlmmnemonic \SCH_UNEXPCTDMAJORFRAME
                                                            \brief Most Recent Major Frame signal was unexpected 
                                                            \details \ref SCHHK_UnexpectedMajorFrame "Click for more"  */
 } SCH_HkPacket_t;
@@ -229,7 +229,7 @@ typedef struct
 
 typedef struct
 {
-    uint8           TlmHeader[CFE_SB_TLM_HDR_SIZE];   /**< \brief cFE Software Bus Telemetry Message Header */
+    CFE_MSG_TelemetryHeader_t    TelemetryHeader;     /**< \brief cFE Software Bus Telemetry Message Header */
 
     uint16          EntryStates[SCH_NUM_STATUS_BYTES_REQD/2]; 
                                                       /**< \schtlmmnemonic \SCH_ENTRYSTATES

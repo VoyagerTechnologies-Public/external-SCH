@@ -88,7 +88,7 @@ void SCH_DisableProcessing_Test(void)
 
 void SCH_GetProcessingState_Test_True(void)
 {
-    boolean   Result;
+    bool   Result;
 
     SCH_LibData.ProcessingDisabledCtr = 0;
 
@@ -96,7 +96,7 @@ void SCH_GetProcessingState_Test_True(void)
     Result = SCH_GetProcessingState();
     
     /* Verify results */
-    UtAssert_True (Result == TRUE, "Result == TRUE");
+    UtAssert_True (Result == true, "Result == true");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 0, "Ut_CFE_EVS_GetEventQueueDepth() == 0");
 
@@ -104,7 +104,7 @@ void SCH_GetProcessingState_Test_True(void)
 
 void SCH_GetProcessingState_Test_False(void)
 {
-    boolean   Result;
+    bool   Result;
 
     SCH_LibData.ProcessingDisabledCtr = 1;
 
@@ -112,7 +112,7 @@ void SCH_GetProcessingState_Test_False(void)
     Result = SCH_GetProcessingState();
     
     /* Verify results */
-    UtAssert_True (Result == FALSE, "Result == FALSE");
+    UtAssert_True (Result == false, "Result == false");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 0, "Ut_CFE_EVS_GetEventQueueDepth() == 0");
 

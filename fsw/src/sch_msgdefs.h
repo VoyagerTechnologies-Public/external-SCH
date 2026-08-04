@@ -97,7 +97,7 @@
 */
 /** \name Scheduler App Miscellaneous Limits */
 /**  \{ */
-#define SCH_MIN_MSG_WORDS       (CFE_SB_CMD_HDR_SIZE / 2)
+#define SCH_MIN_MSG_WORDS       (sizeof(CFE_MSG_CommandHeader_t) / 2)
 #define SCH_TABLE_ENTRIES       (SCH_TOTAL_SLOTS * SCH_ENTRIES_PER_SLOT)
 /** \} */
 

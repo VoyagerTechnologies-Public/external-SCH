@@ -212,7 +212,7 @@ void SCH_MajorFrameCallback_Test_NoisyNotSynchronized(void)
 {
     SCH_AppData.SyncToMET                    = SCH_NOT_SYNCHRONIZED;
     SCH_AppData.MinorFramesSinceTone         = 1;
-    SCH_AppData.IgnoreMajorFrame             = FALSE;
+    SCH_AppData.IgnoreMajorFrame             = false;
     SCH_AppData.ConsecutiveNoisyFrameCounter = SCH_MAX_NOISY_MAJORF - 1;
 
     /* Set to make SCH_GetMETSlotNumber return 1 */
@@ -222,10 +222,10 @@ void SCH_MajorFrameCallback_Test_NoisyNotSynchronized(void)
     SCH_MajorFrameCallback();
     
     /* Verify results */
-    UtAssert_True (SCH_AppData.UnexpectedMajorFrame == TRUE, "SCH_AppData.UnexpectedMajorFrame == TRUE");
+    UtAssert_True (SCH_AppData.UnexpectedMajorFrame == true, "SCH_AppData.UnexpectedMajorFrame == true");
     UtAssert_True (SCH_AppData.UnexpectedMajorFrameCount == 1, "SCH_AppData.UnexpectedMajorFrameCount == 1");
     UtAssert_True (SCH_AppData.ConsecutiveNoisyFrameCounter == SCH_MAX_NOISY_MAJORF, "SCH_AppData.ConsecutiveNoisyFrameCounter == SCH_MAX_NOISY_MAJORF");
-    UtAssert_True (SCH_AppData.IgnoreMajorFrame == TRUE, "SCH_AppData.IgnoreMajorFrame == TRUE");
+    UtAssert_True (SCH_AppData.IgnoreMajorFrame == true, "SCH_AppData.IgnoreMajorFrame == true");
     UtAssert_True (SCH_AppData.LastSyncMETSlot == 1, "SCH_AppData.LastSyncMETSlot == 1");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 0, "Ut_CFE_EVS_GetEventQueueDepth() == 0");
@@ -236,7 +236,7 @@ void SCH_MajorFrameCallback_Test_NoisySynchronized(void)
 {
     SCH_AppData.SyncToMET                    = SCH_MINOR_SYNCHRONIZED;
     SCH_AppData.NextSlotNumber               = 1;
-    SCH_AppData.IgnoreMajorFrame             = FALSE;
+    SCH_AppData.IgnoreMajorFrame             = false;
     SCH_AppData.ConsecutiveNoisyFrameCounter = SCH_MAX_NOISY_MAJORF - 1;
 
     /* Set to make SCH_GetMETSlotNumber return 1 */
@@ -246,10 +246,10 @@ void SCH_MajorFrameCallback_Test_NoisySynchronized(void)
     SCH_MajorFrameCallback();
     
     /* Verify results */
-    UtAssert_True (SCH_AppData.UnexpectedMajorFrame == TRUE, "SCH_AppData.UnexpectedMajorFrame == TRUE");
+    UtAssert_True (SCH_AppData.UnexpectedMajorFrame == true, "SCH_AppData.UnexpectedMajorFrame == true");
     UtAssert_True (SCH_AppData.UnexpectedMajorFrameCount == 1, "SCH_AppData.UnexpectedMajorFrameCount == 1");
     UtAssert_True (SCH_AppData.ConsecutiveNoisyFrameCounter == SCH_MAX_NOISY_MAJORF, "SCH_AppData.ConsecutiveNoisyFrameCounter == SCH_MAX_NOISY_MAJORF");
-    UtAssert_True (SCH_AppData.IgnoreMajorFrame == TRUE, "SCH_AppData.IgnoreMajorFrame == TRUE");
+    UtAssert_True (SCH_AppData.IgnoreMajorFrame == true, "SCH_AppData.IgnoreMajorFrame == true");
     UtAssert_True (SCH_AppData.LastSyncMETSlot == 1, "SCH_AppData.LastSyncMETSlot == 1");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 0, "Ut_CFE_EVS_GetEventQueueDepth() == 0");
@@ -259,7 +259,7 @@ void SCH_MajorFrameCallback_Test_NoisySynchronized(void)
 void SCH_MajorFrameCallback_Test_FrameOccurredWhenExpected(void)
 {
     SCH_AppData.SyncToMET                    = 99;
-    SCH_AppData.IgnoreMajorFrame             = FALSE;
+    SCH_AppData.IgnoreMajorFrame             = false;
     SCH_AppData.ConsecutiveNoisyFrameCounter = 1;
 
     /* Set to make SCH_GetMETSlotNumber return 1 */
@@ -269,7 +269,7 @@ void SCH_MajorFrameCallback_Test_FrameOccurredWhenExpected(void)
     SCH_MajorFrameCallback();
     
     /* Verify results */
-    UtAssert_True (SCH_AppData.UnexpectedMajorFrame == FALSE, "SCH_AppData.UnexpectedMajorFrame == FALSE");
+    UtAssert_True (SCH_AppData.UnexpectedMajorFrame == false, "SCH_AppData.UnexpectedMajorFrame == false");
     UtAssert_True (SCH_AppData.ConsecutiveNoisyFrameCounter == 0, "SCH_AppData.ConsecutiveNoisyFrameCounter == 0");
     UtAssert_True (SCH_AppData.ValidMajorFrameCount == 1, "SCH_AppData.ValidMajorFrameCount == 1");
     UtAssert_True (SCH_AppData.MinorFramesSinceTone == 0, "SCH_AppData.MinorFramesSinceTone == 0");

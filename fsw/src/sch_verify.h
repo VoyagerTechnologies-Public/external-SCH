@@ -45,7 +45,7 @@
   #error  SCH_MDT_MAX_MSG_ID must be at least SCH_MDT_MIN_MSG_ID.
 #endif
 
-#if SCH_MDT_MAX_MSG_ID > CFE_SB_HIGHEST_VALID_MSGID
+#if SCH_MDT_MAX_MSG_ID > CFE_PLATFORM_SB_HIGHEST_VALID_MSGID
   #error SCH_MDT_MAX_MSG_ID must be less than or equal to CFE_SB_HIGHEST_VALID_MSGID.
 #endif
 

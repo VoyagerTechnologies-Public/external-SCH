@@ -32,6 +32,11 @@
 
 #include "cfe_time_msg.h"
 
+#include "sch_events.h"
+#include <pthread.h>
+
+/* Simulith tick API, see cfe_psp_timebase.c, resolved at link time */
+extern unsigned int CFE_PSP_WaitForSimulithTick(unsigned int ticks_to_wait);
 
 /*************************************************************************
 **
@@ -43,6 +48,14 @@
 ** Local function prototypes
 **************************************************************************/
 
+static void *SCH_SimulithTickThread(void *arg);
+
+/*************************************************************************
+** File-scope state for the Simulith-driven minor frame thread
+**************************************************************************/
+
+static pthread_t    g_sch_tick_thread;
+static volatile int g_sch_tick_running = 0;
 
 /*************************************************************************
 **
@@ -50,7 +63,26 @@
 **
 **************************************************************************/
 
+/*
+** SCH_SimulithTickThread
+**
+** Replaces the OSAL timer callback. Blocks on each Simulith tick and
+** fires SCH_MinorFrameCallback exactly once per sim-tick, giving a 1:1
+** mapping between Simulith ticks and SCH minor frame slots at any speed.
+*/
+static void *SCH_SimulithTickThread(void *arg)
+{
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+    pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
 
+    while (g_sch_tick_running)
+    {
+        CFE_PSP_WaitForSimulithTick(1);
+        if (g_sch_tick_running)
+            SCH_MinorFrameCallback(0);
+    }
+    return NULL;
+}
 
 
 /*******************************************************************
@@ -66,12 +98,23 @@
 int32 SCH_CustomEarlyInit(void)
 {
     int32             Status = CFE_SUCCESS;
-    
+
+    /*
+    ** Create the OSAL timer to obtain a valid TimerId. We do not start
+    ** it (no OS_TimerSet call) because the minor frame is driven by the
+    ** Simulith tick thread below. ClockAccuracy is overridden to the
+    ** Simulith tick period so that WorstCaseSlotsPerMinorFrame is correct.
+    */
     Status = OS_TimerCreate(&SCH_AppData.TimerId,
                              SCH_TIMER_NAME,
                             &SCH_AppData.ClockAccuracy,
                              SCH_MinorFrameCallback);
-    
+
+    if (Status == OS_SUCCESS)
+    {
+        SCH_AppData.ClockAccuracy = SCH_NORMAL_SLOT_PERIOD;
+    }
+
     return Status;
 
 } /* End of CustomEarlyInit() */
@@ -98,14 +141,23 @@ int32 SCH_CustomLateInit(void)
     ** to use it as the Major Frame synchronization source
     */
     Status = CFE_TIME_RegisterSynchCallback((CFE_TIME_SynchCallbackPtr_t)&SCH_MajorFrameCallback);
-    if (Status == CFE_SUCCESS)
+    if (Status != CFE_SUCCESS)
     {
-        /*
-        ** Start the Minor Frame Timer with an extended delay to allow a Major Frame Sync
-        ** to start processing.  If the Major Frame Sync fails to arrive, then we will
-        ** start when this timer expires and synch ourselves to the MET clock.
-        */
-        Status = OS_TimerSet(SCH_AppData.TimerId, SCH_STARTUP_PERIOD, 0);
+        return Status;
+    }
+
+    /*
+    ** Start the Simulith-driven minor frame thread. This thread waits
+    ** for one Simulith tick per iteration and calls SCH_MinorFrameCallback,
+    ** replacing the wall-clock POSIX timer that would otherwise cap speed.
+    */
+    g_sch_tick_running = 1;
+    if (pthread_create(&g_sch_tick_thread, NULL, SCH_SimulithTickThread, NULL) != 0)
+    {
+        CFE_EVS_SendEvent(SCH_MAJOR_FRAME_SUB_ERR_EID, CFE_EVS_EventType_CRITICAL,
+                          "SCH: Failed to create Simulith minor frame tick thread");
+        g_sch_tick_running = 0;
+        Status = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
     }
 
     return Status;
@@ -163,6 +215,14 @@ void SCH_CustomCleanup(void)
 {
     /* unregister the TIME callback for the major frame */
     CFE_TIME_UnregisterSynchCallback((CFE_TIME_SynchCallbackPtr_t)&SCH_MajorFrameCallback);
+
+    /*
+    ** Signal the tick thread to stop. pthread_cancel unblocks it from
+    ** CFE_PSP_WaitForSimulithTick (pthread_cond_wait is a cancellation point).
+    */
+    g_sch_tick_running = 0;
+    pthread_cancel(g_sch_tick_thread);
+    pthread_join(g_sch_tick_thread, NULL);
 
 } /* End of SH_CustomCleanup() */
 
@@ -265,7 +325,7 @@ void SCH_MajorFrameCallback(void)
             ** of noisy major frames.  Also, indicate in telemetry that this particular
             ** Major Frame signal is considered noisy.
             */
-            SCH_AppData.UnexpectedMajorFrame = TRUE;
+            SCH_AppData.UnexpectedMajorFrame = true;
             SCH_AppData.UnexpectedMajorFrameCount++;
 
             /*
@@ -281,27 +341,25 @@ void SCH_MajorFrameCallback(void)
                 */
                 if (SCH_AppData.ConsecutiveNoisyFrameCounter >= SCH_MAX_NOISY_MAJORF)
                 {
-                    SCH_AppData.IgnoreMajorFrame = TRUE;
+                    SCH_AppData.IgnoreMajorFrame = true;
                 }
             }
         }
         else /* Major Frame occurred when expected */
         {
-            SCH_AppData.UnexpectedMajorFrame = FALSE;
+            SCH_AppData.UnexpectedMajorFrame = false;
             SCH_AppData.ConsecutiveNoisyFrameCounter = 0;
         }
         
         /*
         ** Ignore this callback if SCH has detected a noisy Major Frame Synch signal
         */
-        if (SCH_AppData.IgnoreMajorFrame == FALSE)
+        if (SCH_AppData.IgnoreMajorFrame == false)
         {
             /*
-            ** Stop Minor Frame Timer (which should be waiting for an unusually long
-            ** time to allow the Major Frame source to resynchronize timing) and start
-            ** it again with nominal Minor Frame timing
+            ** NOTE: We can't call OS_TimerSet from timer callback context per OSAL design.
+            ** Timer is already set as periodic, so just proceed with sync logic.
             */
-            OS_TimerSet(SCH_AppData.TimerId, SCH_NORMAL_SLOT_PERIOD, SCH_NORMAL_SLOT_PERIOD);
     
             /*
             ** Increment Major Frame process counter
@@ -370,13 +428,15 @@ void SCH_MinorFrameCallback(uint32 TimerId)
     if (((SCH_AppData.SyncToMET & SCH_PENDING_MAJOR_SYNCH) != 0) &&
         (SCH_AppData.MajorFrameSource == SCH_MAJOR_FS_MINOR_FRAME_TIMER))
     {
-        /* Whether we have found the Major Frame Start or not, wait another slot */
-        OS_TimerSet(SCH_AppData.TimerId, SCH_NORMAL_SLOT_PERIOD, SCH_NORMAL_SLOT_PERIOD);
+        /* NOTE: We can't call OS_TimerSet from timer callback context per OSAL design.
+         * Timer is already set as periodic, so just proceed with sync logic.
+         */
 
         /* Determine if this was the last attempt */
         SCH_AppData.SyncAttemptsLeft--;
 
         CurrentSlot = SCH_GetMETSlotNumber();
+        
         if ((CurrentSlot != 0) && (SCH_AppData.SyncAttemptsLeft > 0))
         {
             return;
@@ -407,10 +467,9 @@ void SCH_MinorFrameCallback(uint32 TimerId)
         ** It means that the Major Frame Callback did not cancel the
         ** "long slot" timer that was started in the last slot
         **
-        ** It also means that we may now need a "short slot"
-        ** timer to make up for the previous long one
+        ** NOTE: We can't call OS_TimerSet from timer callback context per OSAL design.
+        ** Timer is already set as periodic, so just track the rollover.
         */
-        OS_TimerSet(SCH_AppData.TimerId, SCH_SHORT_SLOT_PERIOD, SCH_NORMAL_SLOT_PERIOD);
         
         SCH_AppData.MinorFramesSinceTone = 0;
         
@@ -419,13 +478,11 @@ void SCH_MinorFrameCallback(uint32 TimerId)
 
     /*
     ** Determine the timer delay value for the next slot
+    ** NOTE: We can't modify timer from callback context, so this logic is simplified
     */
     if (SCH_AppData.MinorFramesSinceTone == SCH_TIME_SYNC_SLOT)
     {
-        /*
-        ** Start "long slot" timer (should be stopped by Major Frame Callback)
-        */
-        OS_TimerSet(SCH_AppData.TimerId, SCH_SYNC_SLOT_PERIOD, 0);
+        /* At sync slot - timer continues periodic */
     }
     
     /*
