@@ -79,7 +79,7 @@ void SCH_DisableProcessing(void)
 **
 ** NOTE: For complete prolog information, see 'sch_api.h'.
 ********************************************************************/
-boolean SCH_GetProcessingState(void)
+bool SCH_GetProcessingState(void)
 {
     return (SCH_LibData.ProcessingDisabledCtr == 0);
 }

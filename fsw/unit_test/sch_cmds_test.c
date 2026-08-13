@@ -51,14 +51,14 @@ void SCH_AppPipe_Test_SendHK(void)
     int32             Result;
     SCH_NoArgsCmd_t   CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_SEND_HK_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_SEND_HK_MID, sizeof(SCH_NoArgsCmd_t), true);
 
     /* Set to make SCH_HousekeepingCmd return CFE_SUCCESS */
     Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_GETADDRESS_INDEX, CFE_SUCCESS, 1);
     Ut_CFE_TBL_ContinueReturnCodeAfterCountZero(UT_CFE_TBL_GETADDRESS_INDEX);
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -72,11 +72,11 @@ void SCH_AppPipe_Test_Noop(void)
     int32             Result;
     SCH_NoArgsCmd_t   CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_NOOP_CC);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), SCH_NOOP_CC);
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -91,11 +91,11 @@ void SCH_AppPipe_Test_Reset(void)
     int32             Result;
     SCH_NoArgsCmd_t   CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_RESET_CC);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), SCH_RESET_CC);
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -110,15 +110,15 @@ void SCH_AppPipe_Test_Enable(void)
     int32            Result;
     SCH_EntryCmd_t   CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_ENABLE_CC);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), SCH_ENABLE_CC);
 
     /* Setting these 2 values just to prevent a segmentation fault */
     CmdPacket.SlotNumber = 99;
     CmdPacket.EntryNumber = 99;
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -133,15 +133,15 @@ void SCH_AppPipe_Test_Disable(void)
     int32            Result;
     SCH_EntryCmd_t   CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_DISABLE_CC);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), SCH_DISABLE_CC);
 
     /* Setting these 2 values just to prevent a segmentation fault */
     CmdPacket.SlotNumber = 99;
     CmdPacket.EntryNumber = 99;
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -156,11 +156,11 @@ void SCH_AppPipe_Test_EnableGroupCmd(void)
     int32            Result;
     SCH_GroupCmd_t   CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_ENABLE_GROUP_CC);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), SCH_ENABLE_GROUP_CC);
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -175,11 +175,11 @@ void SCH_AppPipe_Test_DisableGroupCmd(void)
     int32            Result;
     SCH_GroupCmd_t   CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_DISABLE_GROUP_CC);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), SCH_DISABLE_GROUP_CC);
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -194,11 +194,11 @@ void SCH_AppPipe_Test_EnableSyncCmd(void)
     int32             Result;
     SCH_NoArgsCmd_t   CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_ENABLE_SYNC_CC);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), SCH_ENABLE_SYNC_CC);
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -213,11 +213,11 @@ void SCH_AppPipe_Test_SendDiagTlmCmd(void)
     int32                 Result;
     SCH_ScheduleEntry_t   CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_ScheduleEntry_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), SCH_SEND_DIAG_TLM_CC);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_ScheduleEntry_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), SCH_SEND_DIAG_TLM_CC);
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -232,15 +232,15 @@ void SCH_AppPipe_Test_InvalidCommandCode(void)
     int32            Result;
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), 99);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), 99);
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_CC_ERR_EID, CFE_EVS_ERROR, "Invalid command code: ID = 0x1895, CC = 99"),
+        (Ut_CFE_EVS_EventSent(SCH_CC_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid command code: ID = 0x1895, CC = 99"),
         "Invalid command code: ID = 0x1895, CC = 99");
 
     UtAssert_True (SCH_AppData.ErrCounter == 1, "SCH_AppData.ErrCounter == 1");
@@ -255,14 +255,14 @@ void SCH_AppPipe_Test_InvalidMessageID(void)
     int32            Result;
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, 0x0099, sizeof(SCH_NoArgsCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, 0x0099, sizeof(SCH_NoArgsCmd_t), true);
 
     /* Execute the function being tested */
-    Result = SCH_AppPipe((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_AppPipe((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_MD_ERR_EID, CFE_EVS_ERROR, "Msg with Invalid message ID Rcvd -- ID = 0x0099"),
+        (Ut_CFE_EVS_EventSent(SCH_MD_ERR_EID, CFE_EVS_EventType_ERROR, "Msg with Invalid message ID Rcvd -- ID = 0x0099"),
         "Msg with Invalid message ID Rcvd -- ID = 0x0099");
 
     UtAssert_True (Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
@@ -276,7 +276,7 @@ void SCH_HousekeepingCmd_Test(void)
     int32            Result;
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_SEND_HK_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_SEND_HK_MID, sizeof(SCH_NoArgsCmd_t), true);
 
     /* Set to make SCH_AcquirePointers return CFE_SUCCESS */
     Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_GETADDRESS_INDEX, CFE_SUCCESS, 1);
@@ -306,7 +306,7 @@ void SCH_HousekeepingCmd_Test(void)
     SCH_AppData.MajorFrameSource = 22;
 
     /* Execute the function being tested */
-    Result = SCH_HousekeepingCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    Result = SCH_HousekeepingCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True(SCH_AppData.HkPacket.CmdCounter == 1, "SCH_AppData.HkPacket.CmdCounter == 1");
@@ -342,10 +342,10 @@ void SCH_NoopCmd_Test_Error(void)
 {
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, 1, true);
 
     /* Execute the function being tested */
-    SCH_NoopCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_NoopCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (SCH_AppData.ErrCounter == 1, "SCH_AppData.ErrCounter == 1");
@@ -360,14 +360,14 @@ void SCH_NoopCmd_Test_Nominal(void)
     SCH_NoArgsCmd_t  CmdPacket;
     char             Message[125];
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
 
     /* Execute the function being tested */
-    SCH_NoopCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_NoopCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     sprintf(Message, "NO-op command. Version %d.%d.%d.%d", SCH_MAJOR_VERSION, SCH_MINOR_VERSION, SCH_REVISION, SCH_MISSION_REV);
-    UtAssert_True (Ut_CFE_EVS_EventSent(SCH_NOOP_CMD_EID, CFE_EVS_INFORMATION, Message), Message);
+    UtAssert_True (Ut_CFE_EVS_EventSent(SCH_NOOP_CMD_EID, CFE_EVS_EventType_INFORMATION, Message), Message);
 
     UtAssert_True (SCH_AppData.CmdCounter == 1, "SCH_AppData.CmdCounter == 1");
 
@@ -379,10 +379,10 @@ void SCH_ResetCmd_Test_Error(void)
 {
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, 1, true);
 
     /* Execute the function being tested */
-    SCH_ResetCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_ResetCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (SCH_AppData.ErrCounter == 1, "SCH_AppData.ErrCounter == 1");
@@ -396,10 +396,10 @@ void SCH_ResetCmd_Test_Nominal(void)
 {
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, 1, true);
 
     /* Execute the function being tested */
-    SCH_ResetCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_ResetCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (SCH_AppData.CmdCounter == 0, "SCH_AppData.CmdCounter == 0");
@@ -419,7 +419,7 @@ void SCH_ResetCmd_Test_Nominal(void)
     UtAssert_True(SCH_AppData.UnexpectedMajorFrameCount = 0, "SCH_AppData.UnexpectedMajorFrameCount = 0");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_RESET_CMD_EID, CFE_EVS_DEBUG, "RESET command"),
+        (Ut_CFE_EVS_EventSent(SCH_RESET_CMD_EID, CFE_EVS_EventType_DEBUG, "RESET command"),
         "RESET command");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -431,10 +431,10 @@ void SCH_EnableCmd_Test_InvalidCmdLength(void)
 {
     SCH_EntryCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, 1, true);
 
     /* Execute the function being tested */
-    SCH_EnableCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -446,17 +446,17 @@ void SCH_EnableCmd_Test_InvalidArgumentSlotNumber(void)
 {
     SCH_EntryCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), true);
 
     CmdPacket.SlotNumber  = SCH_TOTAL_SLOTS;
     CmdPacket.EntryNumber = 1;
 
     /* Execute the function being tested */
-    SCH_EnableCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_ENABLE_CMD_ARG_ERR_EID, CFE_EVS_ERROR, "ENABLE cmd: invalid argument, slot=100 (<100), entry=1 (<5)"),
+        (Ut_CFE_EVS_EventSent(SCH_ENABLE_CMD_ARG_ERR_EID, CFE_EVS_EventType_ERROR, "ENABLE cmd: invalid argument, slot=100 (<100), entry=1 (<5)"),
         "ENABLE cmd: invalid argument, slot=100 (<100), entry=1 (<5)");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -467,17 +467,17 @@ void SCH_EnableCmd_Test_InvalidArgumentEntryNumber(void)
 {
     SCH_EntryCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), true);
 
     CmdPacket.SlotNumber  = 1;
     CmdPacket.EntryNumber = SCH_ENTRIES_PER_SLOT;
 
     /* Execute the function being tested */
-    SCH_EnableCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_ENABLE_CMD_ARG_ERR_EID, CFE_EVS_ERROR, "ENABLE cmd: invalid argument, slot=1 (<100), entry=5 (<5)"),
+        (Ut_CFE_EVS_EventSent(SCH_ENABLE_CMD_ARG_ERR_EID, CFE_EVS_EventType_ERROR, "ENABLE cmd: invalid argument, slot=1 (<100), entry=5 (<5)"),
         "ENABLE cmd: invalid argument, slot=1 (<100), entry=5 (<5)");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -488,7 +488,7 @@ void SCH_EnableCmd_Test_InvalidState(void)
 {
     SCH_EntryCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), true);
 
     CmdPacket.SlotNumber  = 0;
     CmdPacket.EntryNumber = 0;
@@ -496,11 +496,11 @@ void SCH_EnableCmd_Test_InvalidState(void)
     SCH_AppData.ScheduleTable[0].EnableState = 99;
 
     /* Execute the function being tested */
-    SCH_EnableCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_ENABLE_CMD_ENTRY_ERR_EID, CFE_EVS_ERROR, "ENABLE command: invalid state = 99, slot = 0, entry = 0"),
+        (Ut_CFE_EVS_EventSent(SCH_ENABLE_CMD_ENTRY_ERR_EID, CFE_EVS_EventType_ERROR, "ENABLE command: invalid state = 99, slot = 0, entry = 0"),
         "ENABLE command: invalid state = 99, slot = 0, entry = 0");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -511,7 +511,7 @@ void SCH_EnableCmd_Test_Nominal(void)
 {
     SCH_EntryCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), true);
 
     CmdPacket.SlotNumber  = 0;
     CmdPacket.EntryNumber = 0;
@@ -519,13 +519,13 @@ void SCH_EnableCmd_Test_Nominal(void)
     SCH_AppData.ScheduleTable[0].EnableState = SCH_DISABLED;
 
     /* Execute the function being tested */
-    SCH_EnableCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (SCH_AppData.ScheduleTable[0].EnableState == SCH_ENABLED, "SCH_AppData.ScheduleTable[0].EnableState == SCH_ENABLED");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_ENABLE_CMD_EID, CFE_EVS_DEBUG, "ENABLE command: slot = 0, entry = 0"),
+        (Ut_CFE_EVS_EventSent(SCH_ENABLE_CMD_EID, CFE_EVS_EventType_DEBUG, "ENABLE command: slot = 0, entry = 0"),
         "ENABLE command: invalid state = 99, slot = 0, entry = 0");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -536,10 +536,10 @@ void SCH_DisableCmd_Test_InvalidCmdLength(void)
 {
     SCH_EntryCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, 1, true);
 
     /* Execute the function being tested */
-    SCH_DisableCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_DisableCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -551,17 +551,17 @@ void SCH_DisableCmd_Test_InvalidArgumentSlotNumber(void)
 {
     SCH_EntryCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), true);
 
     CmdPacket.SlotNumber  = SCH_TOTAL_SLOTS;
     CmdPacket.EntryNumber = 1;
 
     /* Execute the function being tested */
-    SCH_DisableCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_DisableCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_DISABLE_CMD_ARG_ERR_EID, CFE_EVS_ERROR, "DISABLE cmd: invalid argument, slot=100 (<100), entry=1 (<5)"),
+        (Ut_CFE_EVS_EventSent(SCH_DISABLE_CMD_ARG_ERR_EID, CFE_EVS_EventType_ERROR, "DISABLE cmd: invalid argument, slot=100 (<100), entry=1 (<5)"),
         "DISABLE cmd: invalid argument, slot=100 (<100), entry=1 (<5)");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -572,17 +572,17 @@ void SCH_DisableCmd_Test_InvalidArgumentEntryNumber(void)
 {
     SCH_EntryCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), true);
 
     CmdPacket.SlotNumber  = 1;
     CmdPacket.EntryNumber = SCH_ENTRIES_PER_SLOT;
 
     /* Execute the function being tested */
-    SCH_DisableCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_DisableCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_DISABLE_CMD_ARG_ERR_EID, CFE_EVS_ERROR, "DISABLE cmd: invalid argument, slot=1 (<100), entry=5 (<5)"),
+        (Ut_CFE_EVS_EventSent(SCH_DISABLE_CMD_ARG_ERR_EID, CFE_EVS_EventType_ERROR, "DISABLE cmd: invalid argument, slot=1 (<100), entry=5 (<5)"),
         "DISABLE cmd: invalid argument, slot=1 (<100), entry=5 (<5)");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -593,7 +593,7 @@ void SCH_DisableCmd_Test_InvalidState(void)
 {
     SCH_EntryCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), true);
 
     CmdPacket.SlotNumber  = 0;
     CmdPacket.EntryNumber = 0;
@@ -601,11 +601,11 @@ void SCH_DisableCmd_Test_InvalidState(void)
     SCH_AppData.ScheduleTable[0].EnableState = 99;
 
     /* Execute the function being tested */
-    SCH_DisableCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_DisableCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_DISABLE_CMD_ENTRY_ERR_EID, CFE_EVS_ERROR, "DISABLE command: invalid state = 99, slot = 0, entry = 0"),
+        (Ut_CFE_EVS_EventSent(SCH_DISABLE_CMD_ENTRY_ERR_EID, CFE_EVS_EventType_ERROR, "DISABLE command: invalid state = 99, slot = 0, entry = 0"),
         "DISABLE command: invalid state = 99, slot = 0, entry = 0");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -616,7 +616,7 @@ void SCH_DisableCmd_Test_Nominal(void)
 {
     SCH_EntryCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_EntryCmd_t), true);
 
     CmdPacket.SlotNumber  = 0;
     CmdPacket.EntryNumber = 0;
@@ -624,13 +624,13 @@ void SCH_DisableCmd_Test_Nominal(void)
     SCH_AppData.ScheduleTable[0].EnableState = SCH_ENABLED;
 
     /* Execute the function being tested */
-    SCH_DisableCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_DisableCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (SCH_AppData.ScheduleTable[0].EnableState == SCH_DISABLED, "SCH_AppData.ScheduleTable[0].EnableState == SCH_DISABLED");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_DISABLE_CMD_EID, CFE_EVS_DEBUG, "DISABLE command: slot = 0, entry = 0"),
+        (Ut_CFE_EVS_EventSent(SCH_DISABLE_CMD_EID, CFE_EVS_EventType_DEBUG, "DISABLE command: slot = 0, entry = 0"),
         "DISABLE command: invalid state = 99, slot = 0, entry = 0");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -641,10 +641,10 @@ void SCH_EnableGroupCmd_Test_InvalidCmdLength(void)
 {
     SCH_GroupCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, 1, true);
 
     /* Execute the function being tested */
-    SCH_EnableGroupCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableGroupCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -656,14 +656,14 @@ void SCH_EnableGroupCmd_Test_InvalidArgument(void)
 {
     SCH_GroupCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), true);
 
     /* Execute the function being tested */
-    SCH_EnableGroupCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableGroupCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_ENA_GRP_CMD_ERR_EID, CFE_EVS_ERROR, "ENABLE GROUP command: invalid argument, no groups selected"),
+        (Ut_CFE_EVS_EventSent(SCH_ENA_GRP_CMD_ERR_EID, CFE_EVS_EventType_ERROR, "ENABLE GROUP command: invalid argument, no groups selected"),
         "ENABLE GROUP command: invalid argument, no groups selected");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -674,7 +674,7 @@ void SCH_EnableGroupCmd_Test_NominalCmdGroupNumberNotUnused(void)
 {
     SCH_GroupCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), true);
 
     CmdPacket.GroupData = SCH_GROUP_NUMBER_BIT_MASK;
     SCH_AppData.ScheduleTable[0].GroupData = SCH_GROUP_NUMBER_BIT_MASK;
@@ -682,13 +682,13 @@ void SCH_EnableGroupCmd_Test_NominalCmdGroupNumberNotUnused(void)
     SCH_AppData.ScheduleTable[0].EnableState = SCH_DISABLED;
 
     /* Execute the function being tested */
-    SCH_EnableGroupCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableGroupCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True(SCH_AppData.ScheduleTable[0].EnableState == SCH_ENABLED, "SCH_AppData.ScheduleTable[0].EnableState == SCH_ENABLED");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_ENA_GRP_CMD_EID, CFE_EVS_DEBUG, "ENABLE GROUP command: match count = 1"),
+        (Ut_CFE_EVS_EventSent(SCH_ENA_GRP_CMD_EID, CFE_EVS_EventType_DEBUG, "ENABLE GROUP command: match count = 1"),
         "ENABLE GROUP command: match count = 1");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -699,7 +699,7 @@ void SCH_EnableGroupCmd_Test_NominalCmdMultiGroupBitwiseAndTblMultiGroupNotUnuse
 {
     SCH_GroupCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), true);
 
     CmdPacket.GroupData = SCH_MULTI_GROUP_BIT_MASK;
     SCH_AppData.ScheduleTable[0].GroupData = SCH_MULTI_GROUP_BIT_MASK;
@@ -707,13 +707,13 @@ void SCH_EnableGroupCmd_Test_NominalCmdMultiGroupBitwiseAndTblMultiGroupNotUnuse
     SCH_AppData.ScheduleTable[0].EnableState = SCH_DISABLED;
 
     /* Execute the function being tested */
-    SCH_EnableGroupCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableGroupCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True(SCH_AppData.ScheduleTable[0].EnableState == SCH_ENABLED, "SCH_AppData.ScheduleTable[0].EnableState == SCH_ENABLED");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_ENA_GRP_CMD_EID, CFE_EVS_DEBUG, "ENABLE GROUP command: match count = 1"),
+        (Ut_CFE_EVS_EventSent(SCH_ENA_GRP_CMD_EID, CFE_EVS_EventType_DEBUG, "ENABLE GROUP command: match count = 1"),
         "ENABLE GROUP command: match count = 1");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -724,17 +724,17 @@ void SCH_EnableGroupCmd_Test_GroupNotFound(void)
 {
     SCH_GroupCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), true);
 
     CmdPacket.GroupData = 0xFFFFFFFF;
     SCH_AppData.ScheduleTable[0].GroupData = 0x00000000;
 
     /* Execute the function being tested */
-    SCH_EnableGroupCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableGroupCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_ENA_GRP_NOT_FOUND_ERR_EID, CFE_EVS_ERROR, "ENABLE GROUP command: Neither Group 255 nor Multi-Group 0xFFFFFF found"),
+        (Ut_CFE_EVS_EventSent(SCH_ENA_GRP_NOT_FOUND_ERR_EID, CFE_EVS_EventType_ERROR, "ENABLE GROUP command: Neither Group 255 nor Multi-Group 0xFFFFFF found"),
         "ENABLE GROUP command: Neither Group 255 nor Multi-Group 0xFFFFFF found");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -745,10 +745,10 @@ void SCH_DisableGroupCmd_Test_InvalidCmdLength(void)
 {
     SCH_GroupCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, 1, true);
 
     /* Execute the function being tested */
-    SCH_DisableGroupCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_DisableGroupCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -760,14 +760,14 @@ void SCH_DisableGroupCmd_Test_InvalidArgument(void)
 {
     SCH_GroupCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), true);
 
     /* Execute the function being tested */
-    SCH_DisableGroupCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_DisableGroupCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_DIS_GRP_CMD_ERR_EID, CFE_EVS_ERROR, "DISABLE GROUP command: invalid argument, no groups selected"),
+        (Ut_CFE_EVS_EventSent(SCH_DIS_GRP_CMD_ERR_EID, CFE_EVS_EventType_ERROR, "DISABLE GROUP command: invalid argument, no groups selected"),
         "DISABLE GROUP command: invalid argument, no groups selected");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -778,7 +778,7 @@ void SCH_DisableGroupCmd_Test_NominalCmdGroupNumberNotUnused(void)
 {
     SCH_GroupCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), true);
 
     CmdPacket.GroupData = SCH_GROUP_NUMBER_BIT_MASK;
     SCH_AppData.ScheduleTable[0].GroupData = SCH_GROUP_NUMBER_BIT_MASK;
@@ -786,13 +786,13 @@ void SCH_DisableGroupCmd_Test_NominalCmdGroupNumberNotUnused(void)
     SCH_AppData.ScheduleTable[0].EnableState = SCH_ENABLED;
 
     /* Execute the function being tested */
-    SCH_DisableGroupCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_DisableGroupCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True(SCH_AppData.ScheduleTable[0].EnableState == SCH_DISABLED, "SCH_AppData.ScheduleTable[0].EnableState == SCH_DISABLED");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_DIS_GRP_CMD_EID, CFE_EVS_DEBUG, "DISABLE GROUP command: match count = 1"),
+        (Ut_CFE_EVS_EventSent(SCH_DIS_GRP_CMD_EID, CFE_EVS_EventType_DEBUG, "DISABLE GROUP command: match count = 1"),
         "DISABLE GROUP command: match count = 1");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -803,7 +803,7 @@ void SCH_DisableGroupCmd_Test_NominalCmdMultiGroupBitwiseAndTblMultiGroupNotUnus
 {
     SCH_GroupCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), true);
 
     CmdPacket.GroupData = SCH_MULTI_GROUP_BIT_MASK;
     SCH_AppData.ScheduleTable[0].GroupData = SCH_MULTI_GROUP_BIT_MASK;
@@ -811,13 +811,13 @@ void SCH_DisableGroupCmd_Test_NominalCmdMultiGroupBitwiseAndTblMultiGroupNotUnus
     SCH_AppData.ScheduleTable[0].EnableState = SCH_ENABLED;
 
     /* Execute the function being tested */
-    SCH_DisableGroupCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_DisableGroupCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True(SCH_AppData.ScheduleTable[0].EnableState == SCH_DISABLED, "SCH_AppData.ScheduleTable[0].EnableState == SCH_DISABLED");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_DIS_GRP_CMD_EID, CFE_EVS_DEBUG, "DISABLE GROUP command: match count = 1"),
+        (Ut_CFE_EVS_EventSent(SCH_DIS_GRP_CMD_EID, CFE_EVS_EventType_DEBUG, "DISABLE GROUP command: match count = 1"),
         "DISABLE GROUP command: match count = 1");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -828,17 +828,17 @@ void SCH_DisableGroupCmd_Test_GroupNotFound(void)
 {
     SCH_GroupCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_GroupCmd_t), true);
 
     CmdPacket.GroupData = 0xFFFFFFFF;
     SCH_AppData.ScheduleTable[0].GroupData = 0x00000000;
 
     /* Execute the function being tested */
-    SCH_DisableGroupCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_DisableGroupCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_DIS_GRP_NOT_FOUND_ERR_EID, CFE_EVS_ERROR, "DISABLE GROUP command: Neither Group 255 nor Multi-Group 0xFFFFFF found"),
+        (Ut_CFE_EVS_EventSent(SCH_DIS_GRP_NOT_FOUND_ERR_EID, CFE_EVS_EventType_ERROR, "DISABLE GROUP command: Neither Group 255 nor Multi-Group 0xFFFFFF found"),
         "DISABLE GROUP command: Neither Group 255 nor Multi-Group 0xFFFFFF found");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -849,10 +849,10 @@ void SCH_EnableSyncCmd_Test_InvalidCmdLength(void)
 {
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, 1, true);
 
     /* Execute the function being tested */
-    SCH_EnableSyncCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableSyncCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -864,18 +864,18 @@ void SCH_EnableSyncCmd_Test_Nominal(void)
 {
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
 
     /* Execute the function being tested */
-    SCH_EnableSyncCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_EnableSyncCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
-    UtAssert_True(SCH_AppData.IgnoreMajorFrame == FALSE, "SCH_AppData.IgnoreMajorFrame == FALSE");
-    UtAssert_True(SCH_AppData.UnexpectedMajorFrame == FALSE, "SCH_AppData.UnexpectedMajorFrame == FALSE");
+    UtAssert_True(SCH_AppData.IgnoreMajorFrame == false, "SCH_AppData.IgnoreMajorFrame == false");
+    UtAssert_True(SCH_AppData.UnexpectedMajorFrame == false, "SCH_AppData.UnexpectedMajorFrame == false");
     UtAssert_True(SCH_AppData.ConsecutiveNoisyFrameCounter == 0, "SCH_AppData.ConsecutiveNoisyFrameCounter == 0");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_ENA_SYNC_CMD_EID, CFE_EVS_DEBUG, "Major Frame Synchronization Enabled"),
+        (Ut_CFE_EVS_EventSent(SCH_ENA_SYNC_CMD_EID, CFE_EVS_EventType_DEBUG, "Major Frame Synchronization Enabled"),
         "Major Frame Synchronization Enabled");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -886,10 +886,10 @@ void SCH_SendDiagTlmCmd_Test_InvalidCmdLength(void)
 {
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, 1, TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, 1, true);
 
     /* Execute the function being tested */
-    SCH_SendDiagTlmCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_SendDiagTlmCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -901,18 +901,18 @@ void SCH_SendDiagTlmCmd_Test_Enabled(void)
 {
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
 
     SCH_AppData.ScheduleTable[0].EnableState = SCH_ENABLED;
 
     /* Execute the function being tested */
-    SCH_SendDiagTlmCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_SendDiagTlmCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True(SCH_AppData.DiagPacket.EntryStates[0] == (1 << 14), "SCH_AppData.DiagPacket.EntryStates[0] == (1 << 14)");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SEND_DIAG_CMD_EID, CFE_EVS_DEBUG, "Transmitting Diagnostic Message"),
+        (Ut_CFE_EVS_EventSent(SCH_SEND_DIAG_CMD_EID, CFE_EVS_EventType_DEBUG, "Transmitting Diagnostic Message"),
         "Transmitting Diagnostic Message");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -923,18 +923,18 @@ void SCH_SendDiagTlmCmd_Test_Disabled(void)
 {
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
 
     SCH_AppData.ScheduleTable[0].EnableState = SCH_DISABLED;
 
     /* Execute the function being tested */
-    SCH_SendDiagTlmCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_SendDiagTlmCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True(SCH_AppData.DiagPacket.EntryStates[0] == (2 << 14), "SCH_AppData.DiagPacket.EntryStates[0] == (2 << 14)");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SEND_DIAG_CMD_EID, CFE_EVS_DEBUG, "Transmitting Diagnostic Message"),
+        (Ut_CFE_EVS_EventSent(SCH_SEND_DIAG_CMD_EID, CFE_EVS_EventType_DEBUG, "Transmitting Diagnostic Message"),
         "Transmitting Diagnostic Message");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -945,19 +945,19 @@ void SCH_SendDiagTlmCmd_Test_Other(void)
 {
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
 
     SCH_AppData.ScheduleTable[0].EnableState = 99;
     SCH_AppData.DiagPacket.MsgIDs[0]         = 0x1111;
 
     /* Execute the function being tested */
-    SCH_SendDiagTlmCmd((CFE_SB_MsgPtr_t)(&CmdPacket));
+    SCH_SendDiagTlmCmd((CFE_MSG_Message_t *)(&CmdPacket));
     
     /* Verify results */
     UtAssert_True(SCH_AppData.DiagPacket.MsgIDs[0] == 0x0000, "SCH_AppData.DiagPacket.MsgIDs[0] == 0x0000");
 
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_SEND_DIAG_CMD_EID, CFE_EVS_DEBUG, "Transmitting Diagnostic Message"),
+        (Ut_CFE_EVS_EventSent(SCH_SEND_DIAG_CMD_EID, CFE_EVS_EventType_DEBUG, "Transmitting Diagnostic Message"),
         "Transmitting Diagnostic Message");
 
     UtAssert_True (Ut_CFE_EVS_GetEventQueueDepth() == 1, "Ut_CFE_EVS_GetEventQueueDepth() == 1");
@@ -1022,15 +1022,15 @@ void SCH_VerifyCmdLength_Test_LengthError(void)
     int32            Result;
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), 1);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), 1);
 
     /* Execute the function being tested */
-    Result = SCH_VerifyCmdLength((CFE_SB_MsgPtr_t)(&CmdPacket), 99);
+    Result = SCH_VerifyCmdLength((CFE_MSG_Message_t *)(&CmdPacket), 99);
     
     /* Verify results */
     UtAssert_True
-        (Ut_CFE_EVS_EventSent(SCH_CMD_LEN_ERR_EID, CFE_EVS_ERROR, "Cmd Msg with Bad length Rcvd: ID = 0x1895, CC = 1, Exp Len = 99, Len = 8"),
+        (Ut_CFE_EVS_EventSent(SCH_CMD_LEN_ERR_EID, CFE_EVS_EventType_ERROR, "Cmd Msg with Bad length Rcvd: ID = 0x1895, CC = 1, Exp Len = 99, Len = 8"),
         "Cmd Msg with Bad length Rcvd: ID = 0x1895, CC = 1, Exp Len = 99, Len = 8");
 
     UtAssert_True(Result == SCH_BAD_MSG_LENGTH_RC, "Result == SCH_BAD_MSG_LENGTH_RC");
@@ -1044,11 +1044,11 @@ void SCH_VerifyCmdLength_Test_Success(void)
     int32            Result;
     SCH_NoArgsCmd_t  CmdPacket;
 
-    CFE_SB_InitMsg (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), TRUE);
-    CFE_SB_SetCmdCode ((CFE_SB_MsgPtr_t)(&CmdPacket), 1);
+    CFE_MSG_Init (&CmdPacket, SCH_CMD_MID, sizeof(SCH_NoArgsCmd_t), true);
+    CFE_SB_SetCmdCode ((CFE_MSG_Message_t *)(&CmdPacket), 1);
 
     /* Execute the function being tested */
-    Result = SCH_VerifyCmdLength((CFE_SB_MsgPtr_t)(&CmdPacket), sizeof(SCH_NoArgsCmd_t));
+    Result = SCH_VerifyCmdLength((CFE_MSG_Message_t *)(&CmdPacket), sizeof(SCH_NoArgsCmd_t));
     
     /* Verify results */
     UtAssert_True(Result == SCH_SUCCESS, "Result == SCH_SUCCESS");
@@ -1059,7 +1059,7 @@ void SCH_VerifyCmdLength_Test_Success(void)
 
 void SCH_PostCommandResult_Test_GoodCommand(void)
 {
-    boolean   GoodCommand = TRUE;
+    bool   GoodCommand = true;
 
     /* Execute the function being tested */
     SCH_PostCommandResult(GoodCommand);
@@ -1073,7 +1073,7 @@ void SCH_PostCommandResult_Test_GoodCommand(void)
 
 void SCH_PostCommandResult_Test_Error(void)
 {
-    boolean   GoodCommand = FALSE;
+    bool   GoodCommand = false;
 
     /* Execute the function being tested */
     SCH_PostCommandResult(GoodCommand);

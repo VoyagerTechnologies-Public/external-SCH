@@ -326,12 +326,12 @@
 **  \par Cause:
 **
 **  This event message is generated when an Send Message Activity fails to send
-**  the message via the #CFE_SB_SendMsg API.
+**  the message via the #CFE_SB_TransmitMsg API.
 **
 **  The \c slot field identifies the minor frame in the Schedule Definition Table
 **  containing the activity that failed.
 **  The \c entry field identifies the entry in the minor frame that failed.
-**  The \c err field specifies the return code from the #CFE_SB_SendMsg API.
+**  The \c err field specifies the return code from the #CFE_SB_TransmitMsg API.
 **/
 #define SCH_PACKET_SEND_EID                  20
 

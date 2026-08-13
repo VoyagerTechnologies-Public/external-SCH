@@ -69,20 +69,20 @@ void SCH_DisableProcessing(void);
 ** \brief Obtains SCH Application processing state
 **
 ** \par Description
-**      This API returns a TRUE/FALSE indication as to whether the SCH Application
+**      This API returns a true/false indication as to whether the SCH Application
 **      is allowed to process the contents of the Schedule table.
 **
 ** \par Assumptions, External Events, and Notes:
 **          None
 **
 ** \returns
-** \retcode #TRUE   \retdesc Schedule Table Processing is Enabled   \endcode
-** \retcode #FALSE  \retdesc Schedule Table Processing is Disabled  \endcode
+** \retcode #true   \retdesc Schedule Table Processing is Enabled   \endcode
+** \retcode #false  \retdesc Schedule Table Processing is Disabled  \endcode
 ** \endreturns
 **
 **
 ******************************************************************************/
-boolean SCH_GetProcessingState(void);
+bool SCH_GetProcessingState(void);
 
 #endif /* _sch_api_ */
 

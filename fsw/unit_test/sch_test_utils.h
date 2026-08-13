@@ -75,7 +75,7 @@ typedef struct
 {
     int32   Value;
     uint32  Count;
-    boolean ContinueReturnCodeAfterCountZero;
+    bool ContinueReturnCodeAfterCountZero;
 } Ut_CFE_EVS_ReturnCodeTable_t;
 
 void Ut_CFE_EVS_Reset(void);
@@ -105,7 +105,7 @@ typedef struct
 {
     int32   Value;
     uint32  Count;
-    boolean ContinueReturnCodeAfterCountZero;
+    bool ContinueReturnCodeAfterCountZero;
 } Ut_OSTIMER_ReturnCodeTable_t;
 
 void Ut_OSTIMER_Reset(void);
@@ -158,7 +158,7 @@ typedef struct
 {
     int32   Value;
     uint32  Count;
-    boolean ContinueReturnCodeAfterCountZero;
+    bool ContinueReturnCodeAfterCountZero;
 } Ut_CFE_TIME_ReturnCodeTable_t;
 
 void Ut_CFE_TIME_Reset(void);
