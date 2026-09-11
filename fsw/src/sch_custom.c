@@ -136,6 +136,11 @@ int32 SCH_CustomLateInit(void)
     
     CFE_ES_WaitForStartupSync(SCH_STARTUP_SYNC_TIMEOUT);
 
+    /* Consume the configured startup period before enabling schedule
+     * processing. This gives applications time to finish post-sync setup
+     * without accumulating scheduler messages on their command pipes. */
+    CFE_PSP_WaitForSimulithTick(SCH_STARTUP_PERIOD / SCH_NORMAL_SLOT_PERIOD);
+
     /*
     ** Connect to cFE TIME's time reference marker (typically 1 Hz)
     ** to use it as the Major Frame synchronization source
@@ -505,4 +510,3 @@ void SCH_MinorFrameCallback(uint32 TimerId)
 /************************/
 /*  End of File Comment */
 /************************/
-
