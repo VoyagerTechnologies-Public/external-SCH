@@ -208,6 +208,13 @@ void SCH_AppMain(void)
         }
 #endif
 
+        /* Let the selected target complete any work associated with this slot.
+         * The portable flight implementation is a no-op. */
+        if (Status == SCH_SUCCESS)
+        {
+            Status = SCH_CustomCompleteCurrentSlot();
+        }
+
         /*
         ** Note: If there were some reason to exit the task
         **       normally (without error) then we would set
@@ -919,7 +926,25 @@ void SCH_ProcessNextEntry(SCH_ScheduleEntry_t *NextEntry, int32 EntryNumber)
         if (Remainder == NextEntry->Remainder)
         {
             Message = SCH_AppData.MessageTable[NextEntry->MessageIndex].MessageBuffer;
-            Status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *) Message, true);
+            SCH_CustomEntryDecision_t Decision;
+            Status = SCH_CustomPrepareEntry(
+                (SCH_AppData.NextSlotNumber * SCH_ENTRIES_PER_SLOT) +
+                    (uint32)EntryNumber,
+                (CFE_MSG_Message_t *)Message,
+                &Decision);
+            if (Status == CFE_SUCCESS && !Decision.Transmit)
+            {
+                SCH_AppData.ScheduleActivitySuccessCount++;
+                return;
+            }
+            if (Status == CFE_SUCCESS)
+            {
+                Status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *) Message, true);
+            }
+            if (Status == CFE_SUCCESS && Decision.ProcessCommands)
+            {
+                Status = SCH_ProcessCommands();
+            }
             
             /* If additional activity types are added in the future, a switch statement */
             /* would be useful, as shown below:                                         */
@@ -1258,4 +1283,3 @@ int32 SCH_ValidateMessageData(void *TableData)
 /************************/
 /*  End of File Comment */
 /************************/
-

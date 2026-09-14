@@ -32,12 +32,6 @@
 
 #include "cfe_time_msg.h"
 
-#include "sch_events.h"
-#include <pthread.h>
-
-/* Simulith tick API, see cfe_psp_timebase.c, resolved at link time */
-extern unsigned int CFE_PSP_WaitForSimulithTick(unsigned int ticks_to_wait);
-
 /*************************************************************************
 **
 ** Macro definitions
@@ -45,129 +39,10 @@ extern unsigned int CFE_PSP_WaitForSimulithTick(unsigned int ticks_to_wait);
 **************************************************************************/
 
 /*************************************************************************
-** Local function prototypes
-**************************************************************************/
-
-static void *SCH_SimulithTickThread(void *arg);
-
-/*************************************************************************
-** File-scope state for the Simulith-driven minor frame thread
-**************************************************************************/
-
-static pthread_t    g_sch_tick_thread;
-static volatile int g_sch_tick_running = 0;
-
-/*************************************************************************
 **
 ** Function definitions
 **
 **************************************************************************/
-
-/*
-** SCH_SimulithTickThread
-**
-** Replaces the OSAL timer callback. Blocks on each Simulith tick and
-** fires SCH_MinorFrameCallback exactly once per sim-tick, giving a 1:1
-** mapping between Simulith ticks and SCH minor frame slots at any speed.
-*/
-static void *SCH_SimulithTickThread(void *arg)
-{
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-    pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
-
-    while (g_sch_tick_running)
-    {
-        CFE_PSP_WaitForSimulithTick(1);
-        if (g_sch_tick_running)
-            SCH_MinorFrameCallback(0);
-    }
-    return NULL;
-}
-
-
-/*******************************************************************
-**
-** SCH_CustomEarlyInit
-**
-** NOTE: For complete prolog information, see 'sch_custom.h'
-**
-** This function MUST update SCH_AppData.ClockAccuracy to the
-** resolution of the minor frame timer.
-********************************************************************/
-
-int32 SCH_CustomEarlyInit(void)
-{
-    int32             Status = CFE_SUCCESS;
-
-    /*
-    ** Create the OSAL timer to obtain a valid TimerId. We do not start
-    ** it (no OS_TimerSet call) because the minor frame is driven by the
-    ** Simulith tick thread below. ClockAccuracy is overridden to the
-    ** Simulith tick period so that WorstCaseSlotsPerMinorFrame is correct.
-    */
-    Status = OS_TimerCreate(&SCH_AppData.TimerId,
-                             SCH_TIMER_NAME,
-                            &SCH_AppData.ClockAccuracy,
-                             SCH_MinorFrameCallback);
-
-    if (Status == OS_SUCCESS)
-    {
-        SCH_AppData.ClockAccuracy = SCH_NORMAL_SLOT_PERIOD;
-    }
-
-    return Status;
-
-} /* End of CustomEarlyInit() */
-
-
-/*******************************************************************
-**
-** SCH_CustomLateInit
-**
-** NOTE: For complete prolog information, see 'sch_custom.h'
-**
-** This function MUST perform any startup synchronization required,
-** and MUST finish setting up the major and minor frame timers. 
-********************************************************************/
-
-int32 SCH_CustomLateInit(void)
-{
-    int32  Status    = CFE_SUCCESS;
-    
-    CFE_ES_WaitForStartupSync(SCH_STARTUP_SYNC_TIMEOUT);
-
-    /* Consume the configured startup period before enabling schedule
-     * processing. This gives applications time to finish post-sync setup
-     * without accumulating scheduler messages on their command pipes. */
-    CFE_PSP_WaitForSimulithTick(SCH_STARTUP_PERIOD / SCH_NORMAL_SLOT_PERIOD);
-
-    /*
-    ** Connect to cFE TIME's time reference marker (typically 1 Hz)
-    ** to use it as the Major Frame synchronization source
-    */
-    Status = CFE_TIME_RegisterSynchCallback((CFE_TIME_SynchCallbackPtr_t)&SCH_MajorFrameCallback);
-    if (Status != CFE_SUCCESS)
-    {
-        return Status;
-    }
-
-    /*
-    ** Start the Simulith-driven minor frame thread. This thread waits
-    ** for one Simulith tick per iteration and calls SCH_MinorFrameCallback,
-    ** replacing the wall-clock POSIX timer that would otherwise cap speed.
-    */
-    g_sch_tick_running = 1;
-    if (pthread_create(&g_sch_tick_thread, NULL, SCH_SimulithTickThread, NULL) != 0)
-    {
-        CFE_EVS_SendEvent(SCH_MAJOR_FRAME_SUB_ERR_EID, CFE_EVS_EventType_CRITICAL,
-                          "SCH: Failed to create Simulith minor frame tick thread");
-        g_sch_tick_running = 0;
-        Status = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
-    }
-
-    return Status;
-
-} /* End of SH_CustomLateInit() */
 
 
 /*******************************************************************
@@ -208,29 +83,6 @@ uint32 SCH_CustomGetCurrentSlotNumber(void)
     
     return CurrentSlot;
 } /* End of SH_CustomGetCurrentSlotNumber() */
-
-/*******************************************************************
-**
-** SCH_CustomCleanup
-**
-** NOTE: For complete prolog information, see 'sch_custom.h'
-********************************************************************/
-
-void SCH_CustomCleanup(void)
-{
-    /* unregister the TIME callback for the major frame */
-    CFE_TIME_UnregisterSynchCallback((CFE_TIME_SynchCallbackPtr_t)&SCH_MajorFrameCallback);
-
-    /*
-    ** Signal the tick thread to stop. pthread_cancel unblocks it from
-    ** CFE_PSP_WaitForSimulithTick (pthread_cond_wait is a cancellation point).
-    */
-    g_sch_tick_running = 0;
-    pthread_cancel(g_sch_tick_thread);
-    pthread_join(g_sch_tick_thread, NULL);
-
-} /* End of SH_CustomCleanup() */
-
 
 /*******************************************************************
 **
