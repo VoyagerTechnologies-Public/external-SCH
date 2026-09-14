@@ -39,6 +39,13 @@
 ** Exported Functions
 *************************************************************************/
 
+/** Target-specific handling requested for one active schedule entry. */
+typedef struct
+{
+    bool Transmit;
+    bool ProcessCommands;
+} SCH_CustomEntryDecision_t;
+
 /************************************************************************/
 /** \brief Custom Early Initialization
 **  
@@ -121,6 +128,18 @@ uint32 SCH_CustomGetCurrentSlotNumber(void);
 **       
 *************************************************************************/
 void SCH_CustomCleanup(void);
+
+/**
+ * Give the target implementation an opportunity to account for an active
+ * schedule entry before its message is transmitted. The default flight
+ * implementation always transmits and never processes the SCH pipe inline.
+ */
+int32 SCH_CustomPrepareEntry(uint32                    ScheduleEntry,
+                             const CFE_MSG_Message_t   *Message,
+                             SCH_CustomEntryDecision_t *Decision);
+
+/** Complete target-specific work after the current schedule slot. */
+int32 SCH_CustomCompleteCurrentSlot(void);
 
 /************************************************************************/
 /** \brief Computes a minor slot number from a MET subseconds zero point
